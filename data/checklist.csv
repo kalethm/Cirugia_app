@@ -1,0 +1,133 @@
+paciente,fecha,fase,item,estado
+Juan Pérez,2025-01-15,Entrada,Identidad confirmada,True
+Juan Pérez,2025-01-15,Entrada,Consentimiento firmado,True
+Juan Pérez,2025-01-15,Pausa Quirúrgica,Procedimiento confirmado,True
+Juan Pérez,2025-01-15,Salida,Conteo de instrumental correcto,True
+Juan Pérez,2026-02-02,Entrada,Identidad confirmada,False
+Juan Pérez,2026-02-02,Entrada,Sitio quirúrgico confirmado,False
+Juan Pérez,2026-02-02,Entrada,Consentimiento firmado,False
+Juan Pérez,2026-02-02,Entrada,Pulsioxímetro funcionando,False
+Juan Pérez,2026-02-02,Entrada,Alergias verificadas,False
+pedro,2026-02-02,Entrada,Identidad confirmada,True
+pedro,2026-02-02,Entrada,Sitio quirúrgico confirmado,False
+pedro,2026-02-02,Entrada,Consentimiento firmado,False
+pedro,2026-02-02,Entrada,Pulsioxímetro funcionando,False
+pedro,2026-02-02,Entrada,Alergias verificadas,False
+pedro,2026-02-02,Pausa Quirúrgica,Equipo se presenta,False
+pedro,2026-02-02,Pausa Quirúrgica,Procedimiento confirmado,True
+pedro,2026-02-02,Pausa Quirúrgica,Eventos críticos revisados,True
+pedro,2026-02-02,Pausa Quirúrgica,Profilaxis antibiótica,False
+pedro,2026-02-02,Salida,Conteo de instrumental correcto,False
+pedro,2026-02-02,Salida,Muestras etiquetadas,True
+pedro,2026-02-02,Salida,Indicaciones postoperatorias,True
+Juan Pérez,2026-02-02,Entrada (Antes de la anestesia),Identidad confirmada,False
+Juan Pérez,2026-02-02,Entrada (Antes de la anestesia),Sitio quirúrgico confirmado,False
+Juan Pérez,2026-02-02,Entrada (Antes de la anestesia),Procedimiento confirmado,True
+Juan Pérez,2026-02-02,Entrada (Antes de la anestesia),Consentimiento informado,True
+Juan Pérez,2026-02-02,Entrada (Antes de la anestesia),Sitio quirúrgico demarcado (si procede),False
+Juan Pérez,2026-02-02,Entrada (Antes de la anestesia),Control de seguridad de anestesia completado,False
+Juan Pérez,2026-02-02,Entrada (Antes de la anestesia),Pulsioxímetro colocado y funcionando,False
+Juan Pérez,2026-02-02,Entrada (Antes de la anestesia),Alergias conocidas verificadas,False
+Juan Pérez,2026-02-02,Entrada (Antes de la anestesia),Vía aérea difícil / riesgo de aspiración evaluado,False
+Juan Pérez,2026-02-02,Entrada (Antes de la anestesia),Riesgo de hemorragia mayor a 500 ml evaluado,False
+Juan Pérez,2026-02-02,Pausa quirúrgica (Antes de la incisión),Equipo se presenta por nombre y función,False
+Juan Pérez,2026-02-02,Pausa quirúrgica (Antes de la incisión),Identidad del paciente confirmada verbalmente,False
+Juan Pérez,2026-02-02,Pausa quirúrgica (Antes de la incisión),Sitio quirúrgico confirmado verbalmente,False
+Juan Pérez,2026-02-02,Pausa quirúrgica (Antes de la incisión),Procedimiento confirmado verbalmente,True
+Juan Pérez,2026-02-02,Pausa quirúrgica (Antes de la incisión),Cirujano revisa pasos críticos y duración,True
+Juan Pérez,2026-02-02,Pausa quirúrgica (Antes de la incisión),Anestesia revisa problemas específicos del paciente,False
+Juan Pérez,2026-02-02,Pausa quirúrgica (Antes de la incisión),Enfermería confirma esterilidad del instrumental,False
+Juan Pérez,2026-02-02,Pausa quirúrgica (Antes de la incisión),Profilaxis antibiótica administrada en últimos 60 minutos,False
+Juan Pérez,2026-02-02,Pausa quirúrgica (Antes de la incisión),Imágenes diagnósticas esenciales disponibles,False
+Juan Pérez,2026-02-02,Salida (Antes de salir del quirófano),Nombre del procedimiento realizado,False
+Juan Pérez,2026-02-02,Salida (Antes de salir del quirófano),Recuento de instrumental correcto,False
+Juan Pérez,2026-02-02,Salida (Antes de salir del quirófano),Recuento de gasas correcto,False
+Juan Pérez,2026-02-02,Salida (Antes de salir del quirófano),Recuento de agujas correcto,False
+Juan Pérez,2026-02-02,Salida (Antes de salir del quirófano),Muestras correctamente etiquetadas,False
+Juan Pérez,2026-02-02,Salida (Antes de salir del quirófano),Problemas con instrumental o equipos registrados,False
+Juan Pérez,2026-02-02,Salida (Antes de salir del quirófano),Indicaciones de recuperación y tratamiento revisadas,False
+Juan Pérez,2026-02-02,Salida (Antes de salir del quirófano),Nombre del procedimiento realizado,False
+Juan Pérez,2026-02-02,Salida (Antes de salir del quirófano),Recuento de instrumental correcto,False
+Juan Pérez,2026-02-02,Salida (Antes de salir del quirófano),Recuento de gasas correcto,False
+Juan Pérez,2026-02-02,Salida (Antes de salir del quirófano),Recuento de agujas correcto,False
+Juan Pérez,2026-02-02,Salida (Antes de salir del quirófano),Muestras correctamente etiquetadas,False
+Juan Pérez,2026-02-02,Salida (Antes de salir del quirófano),Problemas con instrumental o equipos registrados,False
+Juan Pérez,2026-02-02,Salida (Antes de salir del quirófano),Indicaciones de recuperación y tratamiento revisadas,False
+María Gómez,2026-02-02,Entrada (Antes de la anestesia),Identidad confirmada,False
+María Gómez,2026-02-02,Entrada (Antes de la anestesia),Sitio quirúrgico confirmado,False
+María Gómez,2026-02-02,Entrada (Antes de la anestesia),Procedimiento confirmado,False
+María Gómez,2026-02-02,Entrada (Antes de la anestesia),Consentimiento informado,False
+María Gómez,2026-02-02,Entrada (Antes de la anestesia),Sitio quirúrgico demarcado (si procede),False
+María Gómez,2026-02-02,Entrada (Antes de la anestesia),Control de seguridad de anestesia completado,False
+María Gómez,2026-02-02,Entrada (Antes de la anestesia),Pulsioxímetro colocado y funcionando,False
+María Gómez,2026-02-02,Entrada (Antes de la anestesia),Alergias conocidas verificadas,False
+María Gómez,2026-02-02,Entrada (Antes de la anestesia),Vía aérea difícil / riesgo de aspiración evaluado,False
+María Gómez,2026-02-02,Entrada (Antes de la anestesia),Riesgo de hemorragia mayor a 500 ml evaluado,False
+María Gómez,2026-02-02,Pausa quirúrgica (Antes de la incisión),Equipo se presenta por nombre y función,False
+María Gómez,2026-02-02,Pausa quirúrgica (Antes de la incisión),Identidad del paciente confirmada verbalmente,False
+María Gómez,2026-02-02,Pausa quirúrgica (Antes de la incisión),Sitio quirúrgico confirmado verbalmente,False
+María Gómez,2026-02-02,Pausa quirúrgica (Antes de la incisión),Procedimiento confirmado verbalmente,False
+María Gómez,2026-02-02,Pausa quirúrgica (Antes de la incisión),Cirujano revisa pasos críticos y duración,False
+María Gómez,2026-02-02,Pausa quirúrgica (Antes de la incisión),Anestesia revisa problemas específicos del paciente,True
+María Gómez,2026-02-02,Pausa quirúrgica (Antes de la incisión),Enfermería confirma esterilidad del instrumental,False
+María Gómez,2026-02-02,Pausa quirúrgica (Antes de la incisión),Profilaxis antibiótica administrada en últimos 60 minutos,False
+María Gómez,2026-02-02,Pausa quirúrgica (Antes de la incisión),Imágenes diagnósticas esenciales disponibles,False
+María Gómez,2026-02-02,Salida (Antes de salir del quirófano),Nombre del procedimiento realizado,False
+María Gómez,2026-02-02,Salida (Antes de salir del quirófano),Recuento de instrumental correcto,False
+María Gómez,2026-02-02,Salida (Antes de salir del quirófano),Recuento de gasas correcto,False
+María Gómez,2026-02-02,Salida (Antes de salir del quirófano),Recuento de agujas correcto,True
+María Gómez,2026-02-02,Salida (Antes de salir del quirófano),Muestras correctamente etiquetadas,True
+María Gómez,2026-02-02,Salida (Antes de salir del quirófano),Problemas con instrumental o equipos registrados,False
+María Gómez,2026-02-02,Salida (Antes de salir del quirófano),Indicaciones de recuperación y tratamiento revisadas,False
+María Gómez,2026-02-02,Entrada (Antes de la anestesia),Identidad confirmada,True
+María Gómez,2026-02-02,Entrada (Antes de la anestesia),Sitio quirúrgico confirmado,True
+María Gómez,2026-02-02,Entrada (Antes de la anestesia),Procedimiento confirmado,True
+María Gómez,2026-02-02,Entrada (Antes de la anestesia),Consentimiento informado,False
+María Gómez,2026-02-02,Entrada (Antes de la anestesia),Sitio quirúrgico demarcado (si procede),False
+María Gómez,2026-02-02,Entrada (Antes de la anestesia),Control de seguridad de anestesia completado,False
+María Gómez,2026-02-02,Entrada (Antes de la anestesia),Pulsioxímetro colocado y funcionando,False
+María Gómez,2026-02-02,Entrada (Antes de la anestesia),Alergias conocidas verificadas,False
+María Gómez,2026-02-02,Entrada (Antes de la anestesia),Vía aérea difícil / riesgo de aspiración evaluado,False
+María Gómez,2026-02-02,Entrada (Antes de la anestesia),Riesgo de hemorragia mayor a 500 ml evaluado,False
+María Gómez,2026-02-02,Pausa quirúrgica (Antes de la incisión),Equipo se presenta por nombre y función,True
+María Gómez,2026-02-02,Pausa quirúrgica (Antes de la incisión),Identidad del paciente confirmada verbalmente,True
+María Gómez,2026-02-02,Pausa quirúrgica (Antes de la incisión),Sitio quirúrgico confirmado verbalmente,False
+María Gómez,2026-02-02,Pausa quirúrgica (Antes de la incisión),Procedimiento confirmado verbalmente,False
+María Gómez,2026-02-02,Pausa quirúrgica (Antes de la incisión),Cirujano revisa pasos críticos y duración,False
+María Gómez,2026-02-02,Pausa quirúrgica (Antes de la incisión),Anestesia revisa problemas específicos del paciente,False
+María Gómez,2026-02-02,Pausa quirúrgica (Antes de la incisión),Enfermería confirma esterilidad del instrumental,False
+María Gómez,2026-02-02,Pausa quirúrgica (Antes de la incisión),Profilaxis antibiótica administrada en últimos 60 minutos,False
+María Gómez,2026-02-02,Pausa quirúrgica (Antes de la incisión),Imágenes diagnósticas esenciales disponibles,False
+María Gómez,2026-02-02,Salida (Antes de salir del quirófano),Nombre del procedimiento realizado,False
+María Gómez,2026-02-02,Salida (Antes de salir del quirófano),Recuento de instrumental correcto,False
+María Gómez,2026-02-02,Salida (Antes de salir del quirófano),Recuento de gasas correcto,False
+María Gómez,2026-02-02,Salida (Antes de salir del quirófano),Recuento de agujas correcto,False
+María Gómez,2026-02-02,Salida (Antes de salir del quirófano),Muestras correctamente etiquetadas,True
+María Gómez,2026-02-02,Salida (Antes de salir del quirófano),Problemas con instrumental o equipos registrados,True
+María Gómez,2026-02-02,Salida (Antes de salir del quirófano),Indicaciones de recuperación y tratamiento revisadas,True
+pedro,2026-02-02,Entrada (Antes de la anestesia),Identidad confirmada,True
+pedro,2026-02-02,Entrada (Antes de la anestesia),Sitio quirúrgico confirmado,True
+pedro,2026-02-02,Entrada (Antes de la anestesia),Procedimiento confirmado,True
+pedro,2026-02-02,Entrada (Antes de la anestesia),Consentimiento informado,False
+pedro,2026-02-02,Entrada (Antes de la anestesia),Sitio quirúrgico demarcado (si procede),False
+pedro,2026-02-02,Entrada (Antes de la anestesia),Control de seguridad de anestesia completado,False
+pedro,2026-02-02,Entrada (Antes de la anestesia),Pulsioxímetro colocado y funcionando,False
+pedro,2026-02-02,Entrada (Antes de la anestesia),Alergias conocidas verificadas,False
+pedro,2026-02-02,Entrada (Antes de la anestesia),Vía aérea difícil / riesgo de aspiración evaluado,False
+pedro,2026-02-02,Entrada (Antes de la anestesia),Riesgo de hemorragia mayor a 500 ml evaluado,False
+pedro,2026-02-02,Pausa quirúrgica (Antes de la incisión),Equipo se presenta por nombre y función,True
+pedro,2026-02-02,Pausa quirúrgica (Antes de la incisión),Identidad del paciente confirmada verbalmente,True
+pedro,2026-02-02,Pausa quirúrgica (Antes de la incisión),Sitio quirúrgico confirmado verbalmente,True
+pedro,2026-02-02,Pausa quirúrgica (Antes de la incisión),Procedimiento confirmado verbalmente,False
+pedro,2026-02-02,Pausa quirúrgica (Antes de la incisión),Cirujano revisa pasos críticos y duración,False
+pedro,2026-02-02,Pausa quirúrgica (Antes de la incisión),Anestesia revisa problemas específicos del paciente,False
+pedro,2026-02-02,Pausa quirúrgica (Antes de la incisión),Enfermería confirma esterilidad del instrumental,False
+pedro,2026-02-02,Pausa quirúrgica (Antes de la incisión),Profilaxis antibiótica administrada en últimos 60 minutos,False
+pedro,2026-02-02,Pausa quirúrgica (Antes de la incisión),Imágenes diagnósticas esenciales disponibles,False
+pedro,2026-02-02,Salida (Antes de salir del quirófano),Nombre del procedimiento realizado,True
+pedro,2026-02-02,Salida (Antes de salir del quirófano),Recuento de instrumental correcto,True
+pedro,2026-02-02,Salida (Antes de salir del quirófano),Recuento de gasas correcto,True
+pedro,2026-02-02,Salida (Antes de salir del quirófano),Recuento de agujas correcto,False
+pedro,2026-02-02,Salida (Antes de salir del quirófano),Muestras correctamente etiquetadas,False
+pedro,2026-02-02,Salida (Antes de salir del quirófano),Problemas con instrumental o equipos registrados,False
+pedro,2026-02-02,Salida (Antes de salir del quirófano),Indicaciones de recuperación y tratamiento revisadas,False
