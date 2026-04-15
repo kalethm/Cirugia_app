@@ -1,4 +1,15 @@
-paciente,fecha,motivo,diagnostico,antecedentes,observaciones
-Juan Pérez,2025-01-10,Dolor abdominal,Apendicitis aguda,HTA,Paciente estable
-María Gómez,2025-01-18,Cólico biliar,Colelitiasis,Diabetes tipo 2,Control metabólico adecuado
-María Gómez,2026-02-02,xxx,xxx,xxx,xxxx
+id,tipo_registro,cirugia_id,paciente,fecha_registro,fecha_cirugia,procedimiento,motivo,diagnostico,antecedentes,observaciones,pdf_checklist
+0,,0,Juan Pérez,,,,Dolor abdominal,Apendicitis aguda,HTA,Paciente estable,
+0,,0,María Gómez,,,,Cólico biliar,Colelitiasis,Diabetes tipo 2,Control metabólico adecuado,
+0,,0,María Gómez,,,,xxx,xxx,xxx,xxxx,
+1,Checklist cirugía segura,5,kaleth,2026-04-15 10:01:54,2026-04-15,cesarea,Checklist quirúrgico generado,,,PDF de checklist generado y archivado.,data\pdfs\checklist_cirugia_5.pdf
+2,Checklist cirugía segura,1,kaleth,2026-04-15 10:01:54,2026-04-15,cesarea,Checklist quirúrgico generado,,,PDF de checklist generado y archivado.,data\pdfs\checklist_cirugia_5.pdf
+3,Checklist cirugía segura,2,beatrzoio,2026-04-15 10:47:25,2026-04-15,mastil,Checklist quirúrgico generado,,,PDF de checklist generado y archivado.,data\pdfs\checklist_cirugia_2.pdf
+4,Checklist cirugía segura,3,,2026-04-15 10:04:35,,hola,Checklist quirúrgico generado,,,PDF de checklist generado y archivado.,data\pdfs\checklist_cirugia_3.pdf
+5,Checklist cirugía segura,4,,,,apendicitis,Checklist quirúrgico generado,,,PDF de checklist generado y archivado.,
+6,Checklist cirugía segura,6,kaleth,2026-04-15 12:42:02,2026-04-15,estomago,Checklist quirúrgico generado,,,PDF de checklist generado y archivado.,data\pdfs\checklist_cirugia_6.pdf
+7,Evolución clínica,2,beatrzoio,2026-04-15 12:42:54,2026-04-15,mastil,xds,ddd,ddd,dddd,
+8,Evolución clínica,2,beatrzoio,2026-04-15 12:42:58,2026-04-15,mastil,xds,ddd,ddd,dddd,
+9,Evolución clínica,2,beatrzoio,2026-04-15 12:43:03,2026-04-15,mastil,xds,ddd,ddd,dddd,
+10,Evolución clínica,2,beatrzoio,2026-04-15 12:44:50,2026-04-15,mastil,xds,ddd,ddd,dddd,
+11,Evolución clínica,2,beatrzoio,2026-04-15 12:44:51,2026-04-15,mastil,xds,dddfghf,dddfghfg,ddddhgy,

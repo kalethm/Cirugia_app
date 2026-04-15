@@ -1,5 +1,7 @@
-id,nombre,documento,edad,sexo
-1,Juan Pérez,1023456789,45,Masculino
-2,María Gómez,1098765432,32,Femenino
-3,Carlos Rodríguez,1002345678,60,Masculino
-4,pedro,100,3,Masculino
+nombre_paciente,numero_documento,institucion,tipo_documento,fecha_nacimiento,sexo,edad
+Juan Pérez,1023456789,,,,Masculino,45
+María Gómez,1098765432,,,,Femenino,32
+Carlos Rodríguez,1002345678,,,,Masculino,60
+pedro,100,,,,Masculino,3
+kaleth,1003071307,sura,C.C,2016-04-15,Masculino,10
+beatriz mestra,10030123121212,confa,C.C,2016-04-15,Masculino,10

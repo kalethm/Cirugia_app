@@ -21,7 +21,7 @@ from reportlab.lib.utils import ImageReader, simpleSplit
 
 from auth import login
 from cirugia import render_cirugia
-
+from historia_clinica_paciente import render_historia_clinica
 # =========================
 # CONFIG
 # =========================
@@ -122,38 +122,4 @@ elif menu == "Historial de Pacientes":
 
 #==================================
 elif menu == "Historia Clínica del Paciente":
-    st.title("🩺 Historia Clínica")
-
-    historia = cargar_csv(
-        "data/historia_clinica.csv",
-        ["paciente", "fecha", "motivo", "diagnostico", "antecedentes", "observaciones"]
-    )
-
-    paciente = st.selectbox("Seleccione el paciente", pacientes["nombre"])
-
-    st.subheader("📋 Historial clínico")
-    st.dataframe(
-        historia[historia["paciente"] == paciente],
-        use_container_width=True
-    )
-
-    st.subheader("➕ Nueva evolución clínica")
-    with st.form("form_historia"):
-        motivo = st.text_input("Motivo de consulta")
-        diagnostico = st.text_input("Diagnóstico")
-        antecedentes = st.text_area("Antecedentes")
-        observaciones = st.text_area("Observaciones")
-        guardar = st.form_submit_button("Guardar")
-
-        if guardar:
-            historia.loc[len(historia)] = [
-                paciente,
-                date.today(),
-                motivo,
-                diagnostico,
-                antecedentes,
-                observaciones
-            ]
-            historia.to_csv("data/historia_clinica.csv", index=False)
-            st.success("Historia clínica actualizada")
-
+   render_historia_clinica()
