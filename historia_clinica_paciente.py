@@ -648,13 +648,13 @@ def render_historia_clinica(data_dir: str = "data", assets_dir: str = "assets"):
                     st.rerun()
 
     # ============================================
-    # 🤖 ASISTENTE AI - SOLO LLAMA 3.1 8B
+    # 🤖 ASISTENTE AI - SOLO GPT-OSS 20B
     # ============================================
     st.divider()
     
     with st.container(border=True):
         st.subheader("🤖 Asistente AI - Análisis de Historia Clínica")
-        st.caption("⚡ Potenciado por Groq | Modelo: Llama 3.1 8B | 100% Gratuito")
+        st.caption("⚡ Potenciado por Groq | Modelo: GPT-OSS 20B | 100% Gratuito")
 
         # Intentar inicializar el asistente
         try:
@@ -738,7 +738,7 @@ def render_historia_clinica(data_dir: str = "data", assets_dir: str = "assets"):
                             if result.get("response"):
                                 with st.container(border=True):
                                     st.markdown(result["response"])
-                                st.caption(f"Llama 3.1 8B | Tokens: {result['tokens_used']}")
+                                st.caption(f"GPT-OSS 20B | Tokens: {result['tokens_used']}")
                             elif result.get("error"):
                                 st.error(result["error"])
                         else:

@@ -1,7 +1,5 @@
 # En la terminal, desde la raíz de tu proyecto:
 cat > .gitignore << 'EOF'
-# Streamlit secrets (NUNCA SUBIR A GITHUB)
-.streamlit/secrets.toml
 
 # Python
 __pycache__/
@@ -12,6 +10,7 @@ __pycache__/
 dist/
 build/
 venv/
+.venv/
 env/
 .env
 
@@ -23,4 +22,4 @@ credentials.json
 # Sistema
 .DS_Store
 Thumbs.db
-EOF
+EOF

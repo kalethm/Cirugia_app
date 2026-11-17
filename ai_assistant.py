@@ -7,7 +7,7 @@ from groq import Groq
 class ClinicalAIAssistant:
     """
     Asistente AI para análisis de historias clínicas usando Groq (GRATIS)
-    Modelo fijo: llama-3.1-8b-instant
+    Modelo fijo: openai/gpt-oss-20b
     """
 
     def __init__(self, api_key: str = None):
@@ -25,7 +25,7 @@ class ClinicalAIAssistant:
             )
 
         self.client = Groq(api_key=api_key)
-        self.model = "llama-3.1-8b-instant"  # MODELO FIJO
+        self.model = "openai/gpt-oss-20b"  # MODELO FIJO
 
     def _get_api_key(self) -> str:
         try:
@@ -193,7 +193,7 @@ Analiza el contexto y responde profesionalmente."""}
 🔍 PENDIENTES"""
 
         try:
-            # ✅ USA EL MISMO MODELO FIJO: llama-3.1-8b-instant
+            # ✅ USA EL MISMO MODELO FIJO: openai/gpt-oss-20b
             response = self.client.chat.completions.create(
                 model=self.model,  # <-- CORREGIDO: usa self.model
                 messages=[
