@@ -1,0 +1,5 @@
+id,nombre,tipo,marca,modelo,serial,ubicacion,estado,ultimo_mantenimiento,proximo_mantenimiento,ultima_validacion,proveedor_mantenimiento
+1,Autoclave 1,Autoclave de vapor,DemoClave,V-500,AC-0001,Área estéril,Operativo,2026-08-20,2026-11-25,2026-02-10,Biomédica Demo S.A.S
+2,Autoclave 2,Autoclave de vapor,DemoClave,V-300,AC-0002,Área estéril,En mantenimiento,2026-05-05,2026-11-05,2026-02-10,Biomédica Demo S.A.S
+3,Plasma 1,Esterilizador de peróxido,DemoPlasma,P-100,PL-0001,Área estéril,Operativo,2026-09-15,2027-03-15,2026-03-01,Biomédica Demo S.A.S
+4,Lavadora 1,Lavadora termodesinfectora,DemoWash,W-80,LV-0001,Área sucia,Operativo,2026-10-01,2027-01-01,,Biomédica Demo S.A.S

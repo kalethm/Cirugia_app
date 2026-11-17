@@ -1,1 +1,4 @@
 nombre_paciente,numero_documento,institucion,tipo_documento,fecha_nacimiento,sexo,edad
+Paciente Prueba Uno,900000001,Sura,C.C,1985-03-12,Femenino,41
+Paciente Prueba Dos,900000002,Nueva EPS,C.C,1962-09-30,Masculino,64
+Paciente Prueba Tres,900000003,Sanitas,T.I,2012-06-05,Otro,14

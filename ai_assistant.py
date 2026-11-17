@@ -212,3 +212,37 @@ Analiza el contexto y responde profesionalmente."""}
 
         except Exception as e:
             return {"error": f"Error al generar resumen: {str(e)}", "response": None}
+
+    def ask_central_esterilizacion(self, context: str, historial: list) -> Dict[str, Any]:
+        system_prompt = """Eres el asistente de la central de esterilización de una institución de salud.
+Responde SIEMPRE en español, de forma breve y directa, usando solo los datos entregados.
+Cita códigos de set, números de carga, lotes y fechas. Usa listas o tablas cortas cuando ayuden.
+Si el dato no está en la información, dilo; no inventes registros ni cifras.
+Solo consultas: no puedes modificar registros."""
+
+        try:
+            response = self.client.chat.completions.create(
+                model=self.model,
+                messages=[
+                    {"role": "system", "content": f"{system_prompt}\n\nDATOS ACTUALES DE LA CENTRAL:\n\n{context}"},
+                    *historial,
+                ],
+                temperature=0.2,
+                max_tokens=2000,
+                reasoning_effort="low"
+            )
+
+            return {
+                "response": response.choices[0].message.content,
+                "tokens_used": response.usage.total_tokens,
+                "provider": "Groq (Gratuito)"
+            }
+
+        except Exception as e:
+            error_msg = str(e)
+            if "rate_limit" in error_msg.lower():
+                return {"error": "⏳ Límite de velocidad. Espera unos segundos.", "response": None}
+            elif "401" in error_msg or "403" in error_msg:
+                return {"error": "🔑 API Key inválida. Revisa en https://console.groq.com", "response": None}
+            else:
+                return {"error": f"Error: {error_msg}", "response": None}

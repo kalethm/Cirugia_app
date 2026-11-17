@@ -1,0 +1,5 @@
+id,nombre,nit,categoria,contacto,telefono,email,productos_servicios,estado
+1,Instrumental Demo S.A.S,900100001-1,Instrumental,Laura Ríos,3000000001,ventas@instrumentaldemo.test,Sets e instrumental quirúrgico,Activo
+2,Insumos Estériles Demo Ltda,900100002-2,Insumos de esterilización,Carlos Mejía,3000000002,pedidos@insumosdemo.test,"Indicadores, empaques, detergentes",Activo
+3,Biomédica Demo S.A.S,900100003-3,Mantenimiento de equipos,Ana Torres,3000000003,servicio@biomedicademo.test,Mantenimiento y validación de autoclaves,Activo
+4,Ortoimplantes Demo S.A,900100004-4,Material en consignación,Jorge Peña,3000000004,consignacion@ortodemo.test,Material de osteosíntesis en consignación,Activo

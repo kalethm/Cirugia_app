@@ -1,0 +1,9 @@
+id,codigo,nombre,tipo,especialidad,cantidad_piezas,metodo_esterilizacion,tipo_empaque,estado,ubicacion,fecha_esterilizacion,fecha_vencimiento,carga_id,proveedor,observaciones
+1,SET-001,Cirugía general básica,Set / bandeja,General,42,Vapor (autoclave),Contenedor rígido,Esterilizado,Estante A1,2026-11-10,2027-05-09,2,Instrumental Demo S.A.S,Dato de prueba
+2,SET-002,Laparoscopia básica,Set / bandeja,Laparoscopia,18,Vapor (autoclave),Polipropileno no tejido (SMS),Despachado,Estante A2,2026-11-10,2027-02-08,2,Instrumental Demo S.A.S,Dato de prueba
+3,SET-003,Osteosíntesis pequeños fragmentos,Material en consignación,Ortopedia,65,Vapor (autoclave),Contenedor rígido,En cuarentena,Estante B1,,,4,Ortoimplantes Demo S.A,Dato de prueba
+4,SET-004,Cesárea,Set / bandeja,Ginecobstetricia,35,Vapor (autoclave),Textil doble,Esterilizado,Estante A3,2026-10-20,2026-11-04,1,Instrumental Demo S.A.S,Dato de prueba
+5,SET-005,Legrado,Set / bandeja,Ginecobstetricia,12,Vapor (autoclave),Papel crepado,Empacado,Estante A3,,,3,Instrumental Demo S.A.S,Dato de prueba
+6,SET-006,Catarata,Set / bandeja,Oftalmología,15,Vapor (autoclave),Papel crepado,Esterilizado,Estante C1,2026-10-20,2026-11-19,1,Instrumental Demo S.A.S,Dato de prueba
+7,SET-007,Cistoscopio rígido,Dispositivo termosensible,Urología,4,Peróxido de hidrógeno (plasma),Tyvek,Sucio,Área sucia,,,,Instrumental Demo S.A.S,Dato de prueba
+8,INS-001,Pinzas Kelly sueltas,Instrumento individual,General,6,Vapor (autoclave),Bolsa mixta papel-polímero,En lavado,Área sucia,,,,Instrumental Demo S.A.S,Dato de prueba

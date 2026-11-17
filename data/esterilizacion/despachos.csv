@@ -1,0 +1,2 @@
+id,fecha,tipo,set_codigo,destino,cirugia_id,entrega,recibe,observaciones
+1,2026-11-16 07:30:00,Despacho,SET-002,Quirófano 2,,admin,enfermera1,Dato de prueba

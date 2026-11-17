@@ -22,6 +22,8 @@ from reportlab.lib.utils import ImageReader, simpleSplit
 from auth import login
 from cirugia import render_cirugia
 from historia_clinica_paciente import render_historia_clinica
+from esterilizacion import render_esterilizacion, ROL_ADMIN
+from temas import aplicar_tema, selector_tema
 # =========================
 # CONFIG
 # =========================
@@ -43,6 +45,7 @@ st.set_page_config(
     page_title="Gestión de Cirugías",
     layout="wide"
 )
+aplicar_tema()
 
 # =========================
 # SESIÓN
@@ -84,6 +87,8 @@ checklist = cargar_csv(
 # =========================
 # SIDEBAR
 # =========================
+selector_tema()
+
 st.sidebar.success(
     f"👤 {st.session_state['usuario']} | {st.session_state['rol']}"
 )
@@ -92,15 +97,16 @@ if st.sidebar.button("Cerrar sesión"):
     st.session_state.clear()
     st.rerun()
 
-menu = st.sidebar.radio(
-    "Menú",
-    [
-        "Inicio",
-        "Historial de Pacientes",
-        "Cirugía",
-        "Historia Clínica del Paciente"
-    ]
-)
+opciones_menu = [
+    "Inicio",
+    "Historial de Pacientes",
+    "Cirugía",
+    "Historia Clínica del Paciente"
+]
+if st.session_state.get("rol") == ROL_ADMIN:
+    opciones_menu.append("Central de Esterilización")
+
+menu = st.sidebar.radio("Menú", opciones_menu)
 
 # =========================
 # PANTALLAS
@@ -123,3 +129,8 @@ elif menu == "Historial de Pacientes":
 #==================================
 elif menu == "Historia Clínica del Paciente":
    render_historia_clinica()
+
+
+#==================================
+elif menu == "Central de Esterilización":
+   render_esterilizacion()

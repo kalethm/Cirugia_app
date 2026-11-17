@@ -1,0 +1,7 @@
+id,nombre,categoria,unidad,stock,stock_minimo,lote,fecha_vencimiento,proveedor,ubicacion
+1,Indicador químico clase 5,Indicador químico,Caja,12,5,IQ-5521,2027-08-30,Insumos Estériles Demo Ltda,Bodega 1
+2,Indicador biológico vapor,Indicador biológico,Caja,2,4,BIO-2611,2027-02-28,Insumos Estériles Demo Ltda,Bodega 1
+3,Test Bowie-Dick,Test Bowie-Dick,Paquete,20,10,BD-9001,2027-06-30,Insumos Estériles Demo Ltda,Bodega 1
+4,Papel crepado 90x90,Empaque,Paquete,8,5,PC-3301,,Insumos Estériles Demo Ltda,Bodega 2
+5,Cinta indicadora vapor,Cinta / sello,Rollo,15,6,CI-7710,2026-10-31,Insumos Estériles Demo Ltda,Bodega 2
+6,Detergente enzimático,Detergente / desinfectante,Galón,6,3,DE-4402,2027-05-15,Insumos Estériles Demo Ltda,Área sucia

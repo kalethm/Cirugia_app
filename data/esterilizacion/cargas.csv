@@ -1,0 +1,5 @@
+id,fecha,equipo,metodo,programa,temperatura_c,tiempo_min,presion_psi,operador,sets,contiene_implantes,bowie_dick,indicador_quimico,indicador_biologico,lote_biologico,resultado,observaciones
+1,2026-10-20,Autoclave 1,Vapor (autoclave),Instrumental 134 °C,134.0,4,30.0,admin,SET-004;SET-006,No,Correcto,Viraje correcto,Negativo,BIO-2610,Liberada,Primera carga del día
+2,2026-11-10,Autoclave 1,Vapor (autoclave),Instrumental 134 °C,134.0,4,30.0,admin,SET-001;SET-002,No,Correcto,Viraje correcto,Negativo,BIO-2611,Liberada,
+3,2026-11-16,Autoclave 1,Vapor (autoclave),Instrumental 134 °C,134.0,4,30.0,admin,SET-005,No,No aplica,Viraje incorrecto,Pendiente,BIO-2611,Rechazada,Paquete húmedo al final del ciclo
+4,2026-11-17,Autoclave 1,Vapor (autoclave),Instrumental 134 °C,134.0,4,30.0,admin,SET-003,Sí,Correcto,Viraje correcto,Pendiente,BIO-2611,En cuarentena,Material en consignación con implantes

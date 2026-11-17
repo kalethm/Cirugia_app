@@ -163,6 +163,21 @@ def load_historia(csv_path: str) -> pd.DataFrame:
     return df
 
 
+def load_pacientes_registrados(csv_path: str) -> pd.DataFrame:
+    cols = ["nombre_paciente", "numero_documento", "tipo_documento", "fecha_nacimiento", "sexo", "institucion"]
+    try:
+        df = pd.read_csv(csv_path)
+    except Exception:
+        return pd.DataFrame(columns=cols)
+    for col in cols:
+        if col not in df.columns:
+            df[col] = ""
+    df = df[cols].copy()
+    df["nombre_paciente"] = df["nombre_paciente"].fillna("").astype(str).str.strip()
+    df["numero_documento"] = df["numero_documento"].apply(normalize_document)
+    return df
+
+
 def save_historia(df: pd.DataFrame, csv_path: str):
     df.to_csv(csv_path, index=False)
 
@@ -356,13 +371,14 @@ def render_historia_clinica(data_dir: str = "data", assets_dir: str = "assets"):
     paths = get_paths(data_dir, assets_dir)
     cirugias = load_cirugias(paths["cirugias"])
     historia = load_historia(paths["historia"])
+    registrados = load_pacientes_registrados(os.path.join(data_dir, "pacientes.csv"))
 
     if not cirugias.empty:
         cirugias = cirugias[cirugias["pdf_checklist"].fillna("").astype(str).str.strip() != ""].copy()
 
     st.title("🩺 Historia Clínica del Paciente")
 
-    if cirugias.empty and historia.empty:
+    if cirugias.empty and historia.empty and registrados.empty:
         st.warning("Todavía no hay pacientes ni cirugías archivadas.")
         return
 
@@ -372,6 +388,8 @@ def render_historia_clinica(data_dir: str = "data", assets_dir: str = "assets"):
         tmp["nombre_paciente"] = tmp["nombre_paciente"].fillna("").astype(str).str.strip()
         tmp["numero_documento"] = tmp["numero_documento"].apply(normalize_document)
         pacientes_base.append(tmp)
+    if not registrados.empty:
+        pacientes_base.append(registrados)
 
     if pacientes_base:
         pacientes_df = pd.concat(pacientes_base, ignore_index=True).fillna("")
