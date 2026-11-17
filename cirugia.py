@@ -7,6 +7,8 @@ from datetime import date, datetime, timedelta
 import numpy as np
 import pandas as pd
 import streamlit as st
+
+from navegacion import botones_nav
 import streamlit.components.v1 as components
 from PIL import Image
 from streamlit_drawable_canvas import st_canvas
@@ -1179,14 +1181,20 @@ def build_active_cases(cirugias: pd.DataFrame):
     return activos.sort_values(by=["fecha_cirugia", "id"], ascending=[False, False]) if not activos.empty else activos
 
 
-def render_cirugia(data_dir: str = "data", assets_dir: str = "assets"):
+PANELES_CIRUGIA = ["1. Ingreso del paciente", "2. Checklist por fases"]
+
+
+def render_cirugia(data_dir: str = "data", assets_dir: str = "assets", sidebar=None):
     paths = get_paths(data_dir, assets_dir)
     cirugias = load_cirugias(paths["cirugias"])
     st.title("🏥 Cirugía Segura")
 
-    tab_ingreso, tab_checklist = st.tabs(["1. Ingreso del paciente", "2. Checklist por fases"])
+    panel = botones_nav(PANELES_CIRUGIA, "panel_cirugia", contenedor=sidebar or st.sidebar, titulo="Cirugía Segura", etiquetas={
+        PANELES_CIRUGIA[0]: "🧾 Ingreso del paciente",
+        PANELES_CIRUGIA[1]: "✅ Checklist por fases",
+    })
 
-    with tab_ingreso:
+    if panel == PANELES_CIRUGIA[0]:
         st.subheader("Ingreso del paciente")
         prefill_key = "cirugia_prefill"
         if prefill_key not in st.session_state:
@@ -1313,6 +1321,7 @@ def render_cirugia(data_dir: str = "data", assets_dir: str = "assets"):
                     })
                     st.session_state["cirugia_modo_borrador"] = True
                     st.session_state["cirugia_activa_id"] = None
+                    st.session_state["panel_cirugia"] = PANELES_CIRUGIA[1]
                     st.success("Datos guardados. Continúa con el checklist por fases.")
                     st.rerun()
 
@@ -1325,7 +1334,7 @@ def render_cirugia(data_dir: str = "data", assets_dir: str = "assets"):
                 use_container_width=True,
             )
 
-    with tab_checklist:
+    if panel == PANELES_CIRUGIA[1]:
         activos = build_active_cases(load_cirugias(paths["cirugias"]))
         draft_mode = st.session_state.get("cirugia_modo_borrador", False) and draft_has_data()
         options = []

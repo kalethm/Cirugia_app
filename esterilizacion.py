@@ -5,6 +5,7 @@ import pandas as pd
 import streamlit as st
 
 from ai_assistant import ClinicalAIAssistant
+from navegacion import botones_nav
 
 
 SCHEMAS = {
@@ -887,13 +888,15 @@ def render_ia(data_dir: str):
             st.rerun()
 
 
-def render_esterilizacion(data_dir: str = "data"):
+def render_esterilizacion(data_dir: str = "data", sidebar=None):
     st.title("🧼 Central de Esterilización")
     if st.session_state.get("rol") != ROL_ADMIN:
         st.error("Solo el administrador puede acceder a la Central de Esterilización.")
         return
-    tabs = st.tabs(["📊 Panel", "📦 Inventario", "♨️ Cargas", "🚚 Despacho y recepción", "🧴 Insumos", "⚙️ Equipos", "🏢 Proveedores", "🤖 Asistente IA"])
-    secciones = [render_panel, render_inventario, render_cargas, render_despachos, render_insumos, render_equipos, render_proveedores, render_ia]
-    for tab, seccion in zip(tabs, secciones):
-        with tab:
-            seccion(data_dir)
+    paneles = {
+        "📊 Panel": render_panel, "📦 Inventario": render_inventario, "♨️ Cargas": render_cargas,
+        "🚚 Despacho y recepción": render_despachos, "🧴 Insumos": render_insumos, "⚙️ Equipos": render_equipos,
+        "🏢 Proveedores": render_proveedores, "🤖 Asistente IA": render_ia,
+    }
+    panel = botones_nav(list(paneles), "panel_esterilizacion", contenedor=sidebar or st.sidebar, titulo="Central de Esterilización")
+    paneles[panel](data_dir)

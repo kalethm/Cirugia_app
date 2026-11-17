@@ -24,6 +24,7 @@ from cirugia import render_cirugia
 from historia_clinica_paciente import render_historia_clinica
 from esterilizacion import render_esterilizacion, ROL_ADMIN
 from temas import aplicar_tema, selector_tema
+from navegacion import botones_nav
 # =========================
 # CONFIG
 # =========================
@@ -93,6 +94,8 @@ st.sidebar.success(
     f"👤 {st.session_state['usuario']} | {st.session_state['rol']}"
 )
 
+paneles_sidebar = st.sidebar.container()
+
 if st.sidebar.button("Cerrar sesión"):
     st.session_state.clear()
     st.rerun()
@@ -106,7 +109,13 @@ opciones_menu = [
 if st.session_state.get("rol") == ROL_ADMIN:
     opciones_menu.append("Central de Esterilización")
 
-menu = st.sidebar.radio("Menú", opciones_menu)
+menu = botones_nav(opciones_menu, "menu_principal", horizontal=True, etiquetas={
+    "Inicio": "🏠 Inicio",
+    "Historial de Pacientes": "📋 Pacientes",
+    "Cirugía": "🏥 Cirugía",
+    "Historia Clínica del Paciente": "🩺 Historia Clínica",
+    "Central de Esterilización": "🧼 Esterilización",
+})
 
 # =========================
 # PANTALLAS
@@ -117,7 +126,7 @@ if menu == "Inicio":
 
 # =========================
 elif menu == "Cirugía":
-   render_cirugia()
+   render_cirugia(sidebar=paneles_sidebar)
 
 
 # =========================
@@ -133,4 +142,4 @@ elif menu == "Historia Clínica del Paciente":
 
 #==================================
 elif menu == "Central de Esterilización":
-   render_esterilizacion()
+   render_esterilizacion(sidebar=paneles_sidebar)

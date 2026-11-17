@@ -20,8 +20,8 @@ def aplicar_tema():
 
 def selector_tema():
     with st.sidebar.expander("🎨 Personalización", expanded=True):
-        nombres = list(TEMAS)
-        elegido = st.radio("Tema", nombres, index=nombres.index(st.session_state["tema"]), format_func=lambda t: f"{ICONOS[t]} {t}", horizontal=True)
-    if elegido != st.session_state["tema"]:
-        st.session_state["tema"] = elegido
-        st.rerun()
+        columnas = st.columns(2)
+        for i, nombre in enumerate(TEMAS):
+            if columnas[i % 2].button(f"{ICONOS[nombre]} {nombre}", key=f"tema__{nombre}", type="primary" if nombre == st.session_state["tema"] else "secondary", width="stretch"):
+                st.session_state["tema"] = nombre
+                st.rerun()
