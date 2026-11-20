@@ -1,0 +1,39 @@
+categoria,valor,activo,modificado,usuario
+tipo_documento,C.C,True,,Sistema
+tipo_documento,C.E,True,,Sistema
+tipo_documento,T.I,True,,Sistema
+tipo_documento,PPT,True,,Sistema
+tipo_documento,Otro,True,,Sistema
+sexo,Masculino,True,,Sistema
+sexo,Femenino,True,,Sistema
+sexo,Otro,True,,Sistema
+institucion,Sura,True,,Sistema
+institucion,Nueva EPS,True,,Sistema
+institucion,Sanitas,True,,Sistema
+institucion,Compensar,True,,Sistema
+institucion,Particular,True,,Sistema
+categoria_insumo,Indicador químico,True,,Sistema
+categoria_insumo,Indicador biológico,True,,Sistema
+categoria_insumo,Empaque,True,,Sistema
+categoria_insumo,Detergente,True,,Sistema
+categoria_insumo,Solución,True,,Sistema
+categoria_insumo,Otro,True,,Sistema
+metodo,Autoclave vapor,True,,Sistema
+metodo,Óxido de etileno,True,,Sistema
+metodo,Peróxido de hidrógeno,True,,Sistema
+metodo,Plasma,True,,Sistema
+empaque,Textil doble,True,,Sistema
+empaque,SMS,True,,Sistema
+empaque,Papel crepado,True,,Sistema
+empaque,Bolsa mixta,True,,Sistema
+empaque,Contenedor rígido,True,,Sistema
+empaque,Tyvek,True,,Sistema
+especialidad,General,True,,Sistema
+especialidad,Ortopedia,True,,Sistema
+especialidad,Ginecología,True,,Sistema
+especialidad,Neurocirugía,True,,Sistema
+especialidad,Cardiología,True,,Sistema
+especialidad,Otra,True,,Sistema
+quirofano,Quirófano 1,True,,Sistema
+quirofano,Quirófano 2,True,,Sistema
+quirofano,Quirófano 3,True,,Sistema

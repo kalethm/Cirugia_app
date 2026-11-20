@@ -1,0 +1,2 @@
+id,fecha,hora,paciente,documento,procedimiento,cirujano,quirofano,estado,materiales,observaciones,modificado,usuario
+1,2026-11-20,15:49,pedro,123123123123,dsfdsf,,Quirófano 1,Programada,dsfdsf,dsfdsfdsf,2026-11-20 15:49,admin

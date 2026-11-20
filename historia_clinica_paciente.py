@@ -25,6 +25,7 @@ CIRUGIA_COLUMNS = [
     "edad",
     "fecha_cirugia",
     "procedimiento",
+    "cirujano",
     "checklist_iniciado",
     "preop_completa",
     "firmas_preop_completas",
@@ -271,6 +272,7 @@ def export_pdf(row: pd.Series, pdfs_dir: str, logo_path: str) -> str:
     c.drawString(430, page_height - 62, f"Institución: {row.get('institucion', '')}")
     c.drawString(30, page_height - 76, f"Fecha cirugía: {row.get('fecha_cirugia', '')}")
     c.drawString(250, page_height - 76, f"Procedimiento: {row.get('procedimiento', '')}")
+    c.drawString(430, page_height - 76, f"Cirujano/a: {str(row.get('cirujano', ''))[:30]}")
 
     if os.path.exists(logo_path):
         c.drawImage(

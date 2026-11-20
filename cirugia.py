@@ -18,6 +18,8 @@ from reportlab.lib.pagesizes import landscape, A4
 from reportlab.lib.utils import ImageReader, simpleSplit
 from reportlab.lib import colors
 
+from parametros import opciones as opciones_param
+
 
 CIRUGIA_COLUMNS = [
     "id",
@@ -30,6 +32,7 @@ CIRUGIA_COLUMNS = [
     "edad",
     "fecha_cirugia",
     "procedimiento",
+    "cirujano",
     "checklist_iniciado",
     "preop_completa",
     "firmas_preop_completas",
@@ -353,6 +356,7 @@ def empty_draft():
         "edad": 0,
         "fecha_cirugia": str(date.today()),
         "procedimiento": "",
+        "cirujano": "",
         "checklist_iniciado": False,
         "preop_completa": False,
         "firmas_preop_completas": False,
@@ -506,6 +510,7 @@ def finalize_draft_to_cirugia(paths: dict):
         "edad": draft.get("edad", 0),
         "fecha_cirugia": draft.get("fecha_cirugia", ""),
         "procedimiento": draft.get("procedimiento", ""),
+        "cirujano": draft.get("cirujano", ""),
         "checklist_iniciado": True,
         "preop_completa": draft.get("preop_completa", False),
         "firmas_preop_completas": draft.get("firmas_preop_completas", False),
@@ -733,6 +738,7 @@ def export_pdf(row: pd.Series, pdfs_dir: str, logo_path: str) -> str:
     c.drawString(470, page_height - 62, f"Procedimiento: {row.get('procedimiento', '')}")
     c.drawString(30, page_height - 76, f"Fecha nacimiento: {row.get('fecha_nacimiento', '')}")
     c.drawString(250, page_height - 76, f"Sexo: {row.get('sexo', '')}")
+    c.drawString(430, page_height - 76, f"Cirujano/a: {str(row.get('cirujano', ''))[:30]}")
 
     if os.path.exists(logo_path):
         c.drawImage(ImageReader(logo_path), page_width - 120, page_height - 70, width=80, height=50, preserveAspectRatio=True, mask="auto")
@@ -1258,20 +1264,24 @@ def render_cirugia(data_dir: str = "data", assets_dir: str = "assets", sidebar=N
                 numero_documento = st.text_input("numero_documento", value=str(base_data.get("numero_documento", "")), label_visibility="collapsed")
             with c3:
                 req_label("Institución")
-                institucion = st.text_input("institucion", value=str(base_data.get("institucion", "")), label_visibility="collapsed")
+                inst_base = str(base_data.get("institucion", "")).strip()
+                inst_opts = sorted(set(opciones_param("institucion")) | ({inst_base} if inst_base else set()))
+                institucion = st.selectbox("institucion", inst_opts, index=inst_opts.index(inst_base) if inst_base in inst_opts else 0, label_visibility="collapsed")
 
             c4, c5, c6, c7, c8 = st.columns(5)
             with c4:
                 req_label("Tipo de documento")
                 tipo_base = str(base_data.get("tipo_documento", TIPOS_DOCUMENTO[0]))
-                tipo_documento = st.selectbox("tipo_documento", TIPOS_DOCUMENTO, index=TIPOS_DOCUMENTO.index(tipo_base) if tipo_base in TIPOS_DOCUMENTO else 0, label_visibility="collapsed")
+                tipos_doc = opciones_param("tipo_documento") or TIPOS_DOCUMENTO
+                tipo_documento = st.selectbox("tipo_documento", tipos_doc, index=tipos_doc.index(tipo_base) if tipo_base in tipos_doc else 0, label_visibility="collapsed")
             with c5:
                 req_label("Fecha de nacimiento")
                 fecha_nacimiento = st.date_input("fecha_nacimiento", value=fecha_nac_default, label_visibility="collapsed")
             with c6:
                 req_label("Sexo")
                 sexo_base = str(base_data.get("sexo", ""))
-                sexo = st.selectbox("sexo", SEXOS, index=SEXOS.index(sexo_base) if sexo_base in SEXOS else 0, label_visibility="collapsed")
+                sexos = opciones_param("sexo") or SEXOS
+                sexo = st.selectbox("sexo", sexos, index=sexos.index(sexo_base) if sexo_base in sexos else 0, label_visibility="collapsed")
             with c7:
                 req_label("Edad")
                 edad_calculada = calculate_age(fecha_nacimiento)
@@ -1287,6 +1297,9 @@ def render_cirugia(data_dir: str = "data", assets_dir: str = "assets", sidebar=N
 
             req_label("Procedimiento")
             procedimiento = st.text_input("procedimiento", value=str(base_data.get("procedimiento", "")), label_visibility="collapsed")
+            cir_base = str(base_data.get("cirujano", "")).strip()
+            cir_opts = sorted(set(opciones_param("cirujano")) | ({cir_base} if cir_base else set()))
+            cirujano = st.selectbox("cirujano/a", cir_opts, index=cir_opts.index(cir_base) if cir_base in cir_opts else 0, label_visibility="collapsed")
             guardar_ingreso = st.form_submit_button("Guardar datos para iniciar checklist")
 
             if guardar_ingreso:
@@ -1317,6 +1330,7 @@ def render_cirugia(data_dir: str = "data", assets_dir: str = "assets", sidebar=N
                         "edad": int(edad),
                         "fecha_cirugia": str(fecha_cirugia),
                         "procedimiento": procedimiento.strip(),
+                        "cirujano": cirujano.strip(),
                         "checklist_iniciado": True,
                     })
                     st.session_state["cirugia_modo_borrador"] = True

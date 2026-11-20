@@ -25,6 +25,9 @@ from historia_clinica_paciente import render_historia_clinica
 from esterilizacion import render_esterilizacion, ROL_ADMIN
 from temas import aplicar_tema, selector_tema
 from navegacion import botones_nav
+from metricas import render_metricas
+from parametros import render_parametros
+from agenda import render_agenda
 # =========================
 # CONFIG
 # =========================
@@ -104,17 +107,23 @@ opciones_menu = [
     "Inicio",
     "Historial de Pacientes",
     "Cirugía",
-    "Historia Clínica del Paciente"
+    "Historia Clínica del Paciente",
+    "Métricas"
 ]
 if st.session_state.get("rol") == ROL_ADMIN:
-    opciones_menu.append("Central de Esterilización")
+    opciones_menu.extend(["Central de Esterilización", "Parámetros"])
+if st.session_state.get("rol") in {"Administrador", "Enfermería", "Enfermeria"}:
+    opciones_menu.append("Agenda Quirúrgica")
 
 menu = botones_nav(opciones_menu, "menu_principal", horizontal=True, etiquetas={
     "Inicio": "🏠 Inicio",
     "Historial de Pacientes": "📋 Pacientes",
     "Cirugía": "🏥 Cirugía",
     "Historia Clínica del Paciente": "🩺 Historia Clínica",
+    "Métricas": "📊 Métricas",
     "Central de Esterilización": "🧼 Esterilización",
+    "Parámetros": "🗄️ Parámetros",
+    "Agenda Quirúrgica": "📅 Agenda",
 })
 
 # =========================
@@ -138,6 +147,17 @@ elif menu == "Historial de Pacientes":
 #==================================
 elif menu == "Historia Clínica del Paciente":
    render_historia_clinica()
+
+elif menu == "Métricas":
+   render_metricas(sidebar=paneles_sidebar)
+
+#==================================
+elif menu == "Parámetros":
+   render_parametros(sidebar=paneles_sidebar)
+
+#==================================
+elif menu == "Agenda Quirúrgica":
+   render_agenda(sidebar=paneles_sidebar)
 
 
 #==================================

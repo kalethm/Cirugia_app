@@ -9,23 +9,24 @@ from navegacion import botones_nav
 
 
 SCHEMAS = {
-    "proveedores": ["id", "nombre", "nit", "categoria", "contacto", "telefono", "email", "productos_servicios", "estado"],
+    "proveedores": ["id", "nombre", "nit", "categoria", "contacto", "telefono", "email", "productos_servicios", "estado", "fecha_modificacion", "usuario_modificacion"],
     "instrumental": [
         "id", "codigo", "nombre", "tipo", "especialidad", "cantidad_piezas", "metodo_esterilizacion", "tipo_empaque",
         "estado", "ubicacion", "fecha_esterilizacion", "fecha_vencimiento", "carga_id", "proveedor", "observaciones",
+        "fecha_modificacion", "usuario_modificacion",
     ],
     "cargas": [
         "id", "fecha", "equipo", "metodo", "programa", "temperatura_c", "tiempo_min", "presion_psi", "operador", "sets",
         "contiene_implantes", "bowie_dick", "indicador_quimico", "indicador_biologico", "lote_biologico", "resultado",
-        "observaciones",
+        "observaciones", "fecha_modificacion", "usuario_modificacion",
     ],
-    "insumos": ["id", "nombre", "categoria", "unidad", "stock", "stock_minimo", "lote", "fecha_vencimiento", "proveedor", "ubicacion"],
+    "insumos": ["id", "nombre", "categoria", "unidad", "stock", "stock_minimo", "lote", "fecha_vencimiento", "proveedor", "ubicacion", "fecha_modificacion", "usuario_modificacion"],
     "movimientos_insumos": ["id", "fecha", "insumo", "tipo", "cantidad", "responsable", "observaciones"],
     "equipos": [
         "id", "nombre", "tipo", "marca", "modelo", "serial", "ubicacion", "estado", "ultimo_mantenimiento",
-        "proximo_mantenimiento", "ultima_validacion", "proveedor_mantenimiento",
+        "proximo_mantenimiento", "ultima_validacion", "proveedor_mantenimiento", "fecha_modificacion", "usuario_modificacion",
     ],
-    "despachos": ["id", "fecha", "tipo", "set_codigo", "destino", "cirugia_id", "entrega", "recibe", "observaciones"],
+    "despachos": ["id", "fecha", "tipo", "set_codigo", "destino", "cirugia_id", "entrega", "recibe", "observaciones", "fecha_modificacion", "usuario_modificacion"],
 }
 
 TIPOS_INSTRUMENTAL = ["Set / bandeja", "Instrumento individual", "Material en consignación", "Dispositivo termosensible", "Textil / ropa quirúrgica"]
@@ -70,6 +71,24 @@ def cargar(data_dir: str, nombre: str) -> pd.DataFrame:
 
 
 def guardar(data_dir: str, nombre: str, df: pd.DataFrame):
+    columnas = SCHEMAS[nombre]
+    df = df.reindex(columns=columnas, fill_value="")
+    if "fecha_modificacion" in columnas:
+        ruta = os.path.join(_dir(data_dir), f"{nombre}.csv")
+        anterior = pd.read_csv(ruta, dtype=str, keep_default_na=False) if os.path.exists(ruta) else pd.DataFrame(columns=columnas)
+        if not anterior.empty:
+            anterior = anterior.set_index("id").reindex(df["id"]).reset_index()
+            excluidas = ["fecha_modificacion", "usuario_modificacion"]
+            sin_cambios = (anterior[[c for c in columnas if c not in excluidas]].astype(str).values
+                           == df[[c for c in columnas if c not in excluidas]].astype(str).values)
+            solo_auditoria = sin_cambios.all(axis=1)
+        else:
+            solo_auditoria = pd.Series(False, index=df.index)
+        nuevo = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        usuario = str(st.session_state.get("usuario", "Sistema"))
+        for i in df.index[~solo_auditoria]:
+            df.at[i, "fecha_modificacion"] = nuevo
+            df.at[i, "usuario_modificacion"] = usuario
     df.to_csv(os.path.join(_dir(data_dir), f"{nombre}.csv"), index=False)
 
 
@@ -83,7 +102,14 @@ def agregar(data_dir: str, nombre: str, fila: dict) -> str:
 
 
 def fechas(serie: pd.Series) -> pd.Series:
-    return pd.to_datetime(serie, errors="coerce").dt.date
+    return pd.to_datetime(serie, errors="coerce").map(lambda t: t.date() if pd.notna(t) else None).astype(object)
+
+
+def con_auditoria(columnas: dict) -> dict:
+    items = list(columnas.items())
+    items.insert(len(items) - 1 if "observaciones" in columnas else len(items), ("fecha_modificacion", "Modificado"))
+    items.insert(len(items), ("usuario_modificacion", "Usuario"))
+    return dict(items)
 
 
 def numeros(serie: pd.Series) -> pd.Series:
@@ -205,7 +231,8 @@ def editor(data_dir: str, nombre: str, columnas: dict, bloqueadas=(), opciones=N
                 config[col] = st.column_config.SelectboxColumn(titulo, options=valores)
             else:
                 config[col] = st.column_config.TextColumn(titulo)
-        editado = st.data_editor(vista, column_config=config, disabled=["id", *bloqueadas], hide_index=True, width="stretch", key=f"editor_{nombre}")
+        bloqueadas = ["id", "fecha_modificacion", "usuario_modificacion", *bloqueadas]
+        editado = st.data_editor(vista, column_config=config, disabled=[c for c in bloqueadas if c in vista.columns], hide_index=True, width="stretch", key=f"editor_{nombre}")
         if st.button("Guardar cambios", key=f"guardar_editor_{nombre}", type="primary"):
             editado = editado.fillna("")
             ids_eliminar = editado.loc[editado["eliminar"] == True, "id"].tolist()
@@ -271,7 +298,7 @@ def render_panel(data_dir: str):
     if not cuarentena.empty:
         sin_alertas = False
         st.warning(f"{len(cuarentena)} carga(s) en cuarentena esperando resultado del indicador biológico.")
-        tabla(cuarentena, {"id": "Carga", "fecha": "Fecha", "equipo": "Equipo", "sets": "Sets", "lote_biologico": "Lote biológico"})
+        tabla(cuarentena, con_auditoria({"id": "Carga", "fecha": "Fecha", "equipo": "Equipo", "sets": "Sets", "lote_biologico": "Lote biológico"}))
     if not por_vencer.empty:
         sin_alertas = False
         st.warning(f"{len(por_vencer)} set(s) vencen en los próximos {DIAS_ALERTA_VENCIMIENTO} días.")
@@ -306,11 +333,11 @@ def render_inventario(data_dir: str):
     if vista.empty:
         st.info("No hay instrumental registrado con ese criterio.")
     else:
-        tabla(vista, {
+        tabla(vista, con_auditoria({
             "codigo": "Código", "nombre": "Nombre", "tipo": "Tipo", "especialidad": "Especialidad", "cantidad_piezas": "Piezas",
             "metodo_esterilizacion": "Método", "tipo_empaque": "Empaque", "estado": "Estado", "ubicacion": "Ubicación",
             "fecha_esterilizacion": "Esterilizado", "fecha_vencimiento": "Vence", "carga_id": "Carga", "proveedor": "Proveedor",
-        })
+        }))
 
     with st.expander("➕ Registrar set o instrumento"):
         with st.form("form_instrumental", clear_on_submit=True):
@@ -364,11 +391,11 @@ def render_inventario(data_dir: str):
                     st.rerun()
     editor(
         data_dir, "instrumental",
-        {
+        con_auditoria({
             "codigo": "Código", "nombre": "Nombre", "tipo": "Tipo", "especialidad": "Especialidad", "cantidad_piezas": "Piezas",
             "metodo_esterilizacion": "Método", "tipo_empaque": "Empaque", "estado": "Estado", "ubicacion": "Ubicación",
             "proveedor": "Proveedor", "observaciones": "Observaciones",
-        },
+        }),
         bloqueadas=["codigo", "estado"],
         opciones={
             "tipo": TIPOS_INSTRUMENTAL, "especialidad": ESPECIALIDADES, "metodo_esterilizacion": METODOS,
@@ -466,19 +493,19 @@ def render_cargas(data_dir: str):
             cargas.iloc[::-1], "cargas", pills=("resultado", "Resultado", ["Liberada", "En cuarentena", "Rechazada"]),
             selects=[("equipo", "Equipo"), ("operador", "Operador")], fecha="fecha",
         )
-        tabla(vista, {
+        tabla(vista, con_auditoria({
             "id": "Carga", "fecha": "Fecha", "equipo": "Equipo", "metodo": "Método", "programa": "Programa",
             "temperatura_c": "°C", "tiempo_min": "Min", "presion_psi": "psi", "sets": "Sets", "contiene_implantes": "Implantes",
             "bowie_dick": "Bowie-Dick", "indicador_quimico": "Químico", "indicador_biologico": "Biológico",
             "resultado": "Resultado", "operador": "Operador", "observaciones": "Observaciones",
-        })
+        }))
     editor(
         data_dir, "cargas",
-        {
+        con_auditoria({
             "fecha": "Fecha", "equipo": "Equipo", "sets": "Sets", "resultado": "Resultado", "programa": "Programa",
             "temperatura_c": "°C", "tiempo_min": "Min", "presion_psi": "psi", "operador": "Operador",
             "lote_biologico": "Lote biológico", "observaciones": "Observaciones",
-        },
+        }),
         bloqueadas=["fecha", "equipo", "sets", "resultado"],
         al_eliminar=devolver_sets_de_cargas_eliminadas,
         nota="Al eliminar una carga, los sets que seguían estériles o en cuarentena por ella vuelven a Empacado.",
@@ -561,16 +588,16 @@ def render_despachos(data_dir: str):
             despachos.iloc[::-1], "despachos", pills=("tipo", "Tipo", ["Despacho", "Recepción"]),
             selects=[("set_codigo", "Set"), ("destino", "Destino")], fecha="fecha",
         )
-        tabla(vista, {
+        tabla(vista, con_auditoria({
             "fecha": "Fecha", "tipo": "Tipo", "set_codigo": "Set", "destino": "Destino", "cirugia_id": "Cirugía",
             "entrega": "Entrega", "recibe": "Recibe", "observaciones": "Observaciones",
-        })
+        }))
     editor(
         data_dir, "despachos",
-        {
+        con_auditoria({
             "fecha": "Fecha", "tipo": "Tipo", "set_codigo": "Set", "destino": "Destino", "cirugia_id": "Cirugía",
             "entrega": "Entrega", "recibe": "Recibe", "observaciones": "Observaciones",
-        },
+        }),
         bloqueadas=["fecha", "tipo", "set_codigo"],
         nota="Eliminar un movimiento solo lo quita del registro; no cambia el estado del set.",
     )
@@ -595,6 +622,7 @@ def render_insumos(data_dir: str):
         tabla(vista, {
             "nombre": "Insumo", "categoria": "Categoría", "stock": "Stock", "stock_minimo": "Mínimo", "unidad": "Unidad",
             "lote": "Lote", "fecha_vencimiento": "Vence", "proveedor": "Proveedor", "ubicacion": "Ubicación", "alerta": "Alerta",
+            "fecha_modificacion": "Modificado", "usuario_modificacion": "Usuario",
         })
 
     with st.expander("➕ Registrar insumo"):
@@ -657,10 +685,10 @@ def render_insumos(data_dir: str):
         })
     editor(
         data_dir, "insumos",
-        {
+        con_auditoria({
             "nombre": "Insumo", "categoria": "Categoría", "unidad": "Unidad", "stock": "Stock", "stock_minimo": "Mínimo",
             "lote": "Lote", "fecha_vencimiento": "Vence (AAAA-MM-DD)", "proveedor": "Proveedor", "ubicacion": "Ubicación",
-        },
+        }),
         opciones={"categoria": CATEGORIAS_INSUMO, "unidad": UNIDADES, "proveedor": nombres_proveedores(data_dir)},
         clave="nombre",
     )
@@ -674,11 +702,11 @@ def render_equipos(data_dir: str):
         st.info("Todavía no hay equipos registrados.")
     else:
         vista = filtrar(equipos, "equipos", pills=("estado", "Estado", ESTADOS_EQUIPO), selects=[("tipo", "Tipo"), ("ubicacion", "Ubicación")])
-        tabla(vista, {
+        tabla(equipos, con_auditoria({
             "nombre": "Equipo", "tipo": "Tipo", "marca": "Marca", "modelo": "Modelo", "serial": "Serial", "ubicacion": "Ubicación",
             "estado": "Estado", "ultimo_mantenimiento": "Último mantenimiento", "proximo_mantenimiento": "Próximo mantenimiento",
             "ultima_validacion": "Última validación", "proveedor_mantenimiento": "Proveedor de mantenimiento",
-        })
+        }))
 
     with st.expander("➕ Registrar equipo", expanded=equipos.empty):
         with st.form("form_equipo", clear_on_submit=True):
@@ -732,12 +760,12 @@ def render_equipos(data_dir: str):
                     st.rerun()
     editor(
         data_dir, "equipos",
-        {
+        con_auditoria({
             "nombre": "Equipo", "tipo": "Tipo", "marca": "Marca", "modelo": "Modelo", "serial": "Serial", "ubicacion": "Ubicación",
             "estado": "Estado", "ultimo_mantenimiento": "Último mantenimiento (AAAA-MM-DD)",
             "proximo_mantenimiento": "Próximo mantenimiento (AAAA-MM-DD)", "ultima_validacion": "Última validación (AAAA-MM-DD)",
             "proveedor_mantenimiento": "Proveedor de mantenimiento",
-        },
+        }),
         opciones={"tipo": TIPOS_EQUIPO, "estado": ESTADOS_EQUIPO, "proveedor_mantenimiento": nombres_proveedores(data_dir)},
         clave="nombre",
     )
@@ -751,10 +779,10 @@ def render_proveedores(data_dir: str):
         st.info("Todavía no hay proveedores registrados.")
     else:
         vista = filtrar(proveedores, "proveedores", pills=("categoria", "Categoría", CATEGORIAS_PROVEEDOR), selects=[("estado", "Estado")])
-        tabla(vista, {
+        tabla(proveedores, con_auditoria({
             "nombre": "Proveedor", "nit": "NIT", "categoria": "Categoría", "contacto": "Contacto", "telefono": "Teléfono",
             "email": "Correo", "productos_servicios": "Productos / servicios", "estado": "Estado",
-        })
+        }))
 
     with st.expander("➕ Registrar proveedor", expanded=proveedores.empty):
         with st.form("form_proveedor", clear_on_submit=True):
@@ -793,10 +821,10 @@ def render_proveedores(data_dir: str):
                     st.rerun()
     editor(
         data_dir, "proveedores",
-        {
+        con_auditoria({
             "nombre": "Proveedor", "nit": "NIT", "categoria": "Categoría", "contacto": "Contacto", "telefono": "Teléfono",
             "email": "Correo", "productos_servicios": "Productos / servicios", "estado": "Estado",
-        },
+        }),
         opciones={"categoria": CATEGORIAS_PROVEEDOR, "estado": ["Activo", "Inactivo"]},
         clave="nombre",
     )
