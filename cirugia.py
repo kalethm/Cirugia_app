@@ -19,6 +19,7 @@ from reportlab.lib.utils import ImageReader, simpleSplit
 from reportlab.lib import colors
 
 from parametros import opciones as opciones_param
+import db
 
 
 CIRUGIA_COLUMNS = [
@@ -174,9 +175,8 @@ def get_paths(data_dir: str = "data", assets_dir: str = "assets"):
 
 
 def load_cirugias(csv_path: str) -> pd.DataFrame:
-    if os.path.exists(csv_path):
-        df = pd.read_csv(csv_path)
-    else:
+    df = db.leer("cirugias")
+    if df.empty:
         df = pd.DataFrame(columns=CIRUGIA_COLUMNS)
 
     for col in CIRUGIA_COLUMNS:
@@ -193,13 +193,12 @@ def load_cirugias(csv_path: str) -> pd.DataFrame:
 
 
 def save_cirugias(df: pd.DataFrame, csv_path: str):
-    df.to_csv(csv_path, index=False)
+    db.guardar("cirugias", df)
 
 
 def load_historia(csv_path: str) -> pd.DataFrame:
-    if os.path.exists(csv_path):
-        df = pd.read_csv(csv_path)
-    else:
+    df = db.leer("historia_clinica")
+    if df.empty:
         df = pd.DataFrame(columns=HISTORIA_COLUMNS)
     for col in HISTORIA_COLUMNS:
         if col not in df.columns:
@@ -213,7 +212,7 @@ def load_historia(csv_path: str) -> pd.DataFrame:
 
 
 def save_historia(df: pd.DataFrame, csv_path: str):
-    df.to_csv(csv_path, index=False)
+    db.guardar("historia_clinica", df)
 
 
 def upsert_checklist_historia(historia_csv: str, row: pd.Series, pdf_path: str):
@@ -442,9 +441,10 @@ def normalize_patients_df(df: pd.DataFrame) -> pd.DataFrame:
 
 def load_pacientes(paths: dict) -> pd.DataFrame:
     sources = []
-    if os.path.exists(paths["pacientes"]):
+    pacs = db.leer("pacientes")
+    if not pacs.empty:
         try:
-            sources.append(normalize_patients_df(pd.read_csv(paths["pacientes"])))
+            sources.append(normalize_patients_df(pacs))
         except Exception:
             pass
     cir = load_cirugias(paths["cirugias"])
@@ -1321,16 +1321,16 @@ def render_cirugia(data_dir: str = "data", assets_dir: str = "assets", sidebar=N
                 else:
                     save_draft({
                         **get_draft(),
-                        "nombre_paciente": nombre_paciente.strip(),
+                        "nombre_paciente": nombre_paciente.strip().title(),
                         "numero_documento": normalize_document(numero_documento),
-                        "institucion": institucion.strip(),
+                        "institucion": institucion.strip().title(),
                         "tipo_documento": tipo_documento,
                         "fecha_nacimiento": str(fecha_nacimiento),
                         "sexo": sexo,
                         "edad": int(edad),
                         "fecha_cirugia": str(fecha_cirugia),
-                        "procedimiento": procedimiento.strip(),
-                        "cirujano": cirujano.strip(),
+                        "procedimiento": procedimiento.strip().title(),
+                        "cirujano": cirujano.strip().title(),
                         "checklist_iniciado": True,
                     })
                     st.session_state["cirugia_modo_borrador"] = True

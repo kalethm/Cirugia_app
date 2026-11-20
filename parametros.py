@@ -11,6 +11,7 @@ import pandas as pd
 import streamlit as st
 
 from navegacion import botones_nav
+import db
 
 COLUMNAS = ["categoria", "valor", "activo", "modificado", "usuario"]
 
@@ -54,29 +55,30 @@ def ruta(data_dir="data"):
 
 
 def cargar(data_dir="data"):
-    path = ruta(data_dir)
-    if not os.path.exists(path):
+    df = db.leer("parametros")
+    df = df.loc[:, ~df.columns.duplicated()]
+    if df.empty:
         filas = [{"categoria": c, "valor": v, "activo": True, "modificado": "", "usuario": "Sistema"}
                  for c, vs in SEMILLA.items() for v in vs]
         df = pd.DataFrame(filas, columns=COLUMNAS)
-        df.to_csv(path, index=False)
+        db.guardar("parametros", df)
         return df
-    df = pd.read_csv(path, dtype=str).fillna("")
     for col in COLUMNAS:
         if col not in df.columns:
             df[col] = ""
     df["activo"] = df["activo"].astype(str).str.lower().isin(["true", "1", "si", "sí"])
+    df["valor"] = df["valor"].astype(str).str.strip().str.title()
     faltantes = [c for c in SEMILLA if not (df["categoria"] == c).any()]
     if faltantes:
         extra = pd.DataFrame([{"categoria": c, "valor": v, "activo": True, "modificado": "", "usuario": "Sistema"}
                               for c in faltantes for v in SEMILLA[c]], columns=COLUMNAS)
         df = pd.concat([df, extra], ignore_index=True)
-        df.to_csv(path, index=False)
+        db.guardar("parametros", df)
     return df[COLUMNAS].copy()
 
 
 def guardar(df, data_dir="data"):
-    df[COLUMNAS].to_csv(ruta(data_dir), index=False)
+    db.guardar("parametros", df[COLUMNAS])
 
 
 def opciones(categoria, data_dir="data"):
@@ -105,8 +107,9 @@ def _guardar_cambio(df, mascara, activo, data_dir):
 def _tarjeta_categoria(df, cat, data_dir):
     """Una tarjeta por categoría con sus valores y acciones."""
     bloque = df[df["categoria"] == cat].sort_values("valor")
-    activos = bloque[bloque["activo"]]
-    inactivos = bloque[~bloque["activo"]]
+    mask = bloque["activo"].astype(str).str.lower().isin(["true", "1", "si", "sí"])
+    activos = bloque[mask]
+    inactivos = bloque[~mask]
     n_act = len(activos)
     n_inact = len(inactivos)
 
@@ -133,7 +136,7 @@ def _tarjeta_categoria(df, cat, data_dir):
             with st.form(f"alta_{cat}", clear_on_submit=True):
                 nuevo = st.text_input("Agregar valor", key=f"nuevo_{cat}", label_visibility="collapsed", placeholder="Nuevo valor…")
                 if st.form_submit_button("➕ Agregar", width="stretch") and nuevo.strip():
-                    v = nuevo.strip()
+                    v = nuevo.strip().title()
                     existe = ((df["categoria"] == cat) & (df["valor"].astype(str).str.strip() == v)).any()
                     if existe:
                         st.warning("Ya existe.")
@@ -176,8 +179,86 @@ def render_parametros(data_dir="data", sidebar=None):
     m2.metric("Valores activos", activos_total)
     m3.metric("Valores inactivos", total - activos_total)
 
-    grupos = list(CATEGORIAS)
+    grupos = list(CATEGORIAS) + ["👥 Usuarios", "💾 Respaldos"]
     panel = botones_nav(grupos, "panel_parametros", contenedor=sidebar or st.sidebar, titulo="Parámetros")
     st.subheader(panel)
+    if panel == "👥 Usuarios":
+        _panel_usuarios()
+        return
+    if panel == "💾 Respaldos":
+        _panel_respaldos()
+        return
     for cat in CATEGORIAS[panel]:
         _tarjeta_categoria(df, cat, data_dir)
+
+
+def _panel_usuarios():
+    """Gestión de usuarios del sistema (crear, eliminar, cambiar rol)."""
+    df = db.leer("usuarios")
+    st.caption("Usuarios con acceso al sistema. Las claves se guardan en la base de datos.")
+    if df.empty:
+        st.info("Sin usuarios.")
+        return
+    st.dataframe(df[["usuario", "rol"]] if "rol" in df.columns else df, width="stretch", hide_index=True)
+    c1, c2 = st.columns(2)
+    with c1:
+        with st.form("form_usuario", clear_on_submit=True):
+            u = st.text_input("Usuario")
+            k = st.text_input("Clave", type="password")
+            r = st.selectbox("Rol", ["Administrador", "Cirujano", "Enfermería"])
+            if st.form_submit_button("➕ Crear usuario", width="stretch"):
+                if not u.strip() or not k.strip():
+                    st.error("Usuario y clave obligatorios.")
+                elif (df["usuario"].astype(str).str.strip().str.lower() == u.strip().lower()).any():
+                    st.warning("Ese usuario ya existe.")
+                else:
+                    nuevo = pd.DataFrame([[u.strip(), k.strip(), r]], columns=["usuario", "clave", "rol"])
+                    db.guardar("usuarios", pd.concat([df, nuevo], ignore_index=True))
+                    st.success(f"Usuario '{u}' creado.")
+                    st.rerun()
+    with c2:
+        a_borrar = st.multiselect("Eliminar usuarios", sorted(df["usuario"].astype(str).tolist()), key="usuarios_borrar")
+        if st.button("🗑️ Eliminar seleccionados", disabled=not a_borrar):
+            if any(x.lower() == "admin" for x in a_borrar):
+                st.error("No se puede eliminar el usuario admin.")
+            else:
+                db.guardar("usuarios", df[~df["usuario"].astype(str).isin(a_borrar)])
+                st.success(f"{len(a_borrar)} usuario(s) eliminados.")
+                st.rerun()
+
+
+def _panel_respaldos():
+    """Respaldos de la base SQLite: automático diario + crear/descargar/restaurar."""
+    import glob
+    st.caption("La base de datos (data/app.db) se respalda automáticamente una vez al día al guardar cambios. Aquí puedes crear, descargar y restaurar respaldos.")
+    c1, c2 = st.columns([1, 2])
+    with c1:
+        if st.button("💾 Crear respaldo ahora", type="primary"):
+            dest = db.crear_respaldo()
+            st.success("Respaldo creado: " + os.path.basename(dest))
+            st.rerun()
+    with c2:
+        res = db.resumen()
+        st.caption("Tablas en la base: " + ", ".join(f"{t} ({n})" for t, n in res.items()) if res else "Base vacía.")
+    archivos = sorted(glob.glob(os.path.join("data", "backups", "*.db")), reverse=True)
+    st.markdown("**Respaldos disponibles**")
+    if not archivos:
+        st.info("Aún no hay respaldos; se crean solos al guardar cambios.")
+    else:
+        for a in archivos[:15]:
+            col_a, col_b = st.columns([3, 1])
+            col_a.write("• " + os.path.basename(a) + f"  ({os.path.getsize(a)//1024} KB)")
+            with open(a, "rb") as f:
+                col_b.download_button("⬇️", f.read(), os.path.basename(a), "application/octet-stream", key="dl_" + a)
+    st.divider()
+    st.markdown("**Restaurar (subir un respaldo descargado)**")
+    st.warning("Restaurar reemplaza todos los datos actuales por los del archivo.")
+    up = st.file_uploader("Archivo de respaldo (.db)", type=["db"], key="respaldo_upload")
+    if up and st.button("♻️ Restaurar este respaldo"):
+        tmp = os.path.join("data", "_restore_tmp.db")
+        with open(tmp, "wb") as f:
+            f.write(up.getvalue())
+        db.restaurar(tmp)
+        os.remove(tmp)
+        st.success("Base de datos restaurada. Recargando la aplicación…")
+        st.rerun()

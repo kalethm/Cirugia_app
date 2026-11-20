@@ -4,6 +4,7 @@ import re
 from datetime import date, datetime
 
 import pandas as pd
+import db
 import streamlit as st
 from reportlab.pdfgen import canvas as pdf_canvas
 from reportlab.lib.pagesizes import landscape, A4
@@ -126,9 +127,8 @@ def get_paths(data_dir: str = "data", assets_dir: str = "assets"):
 
 
 def load_cirugias(csv_path: str) -> pd.DataFrame:
-    if os.path.exists(csv_path):
-        df = pd.read_csv(csv_path)
-    else:
+    df = db.leer("cirugias")
+    if df.empty:
         df = pd.DataFrame(columns=CIRUGIA_COLUMNS)
 
     for col in CIRUGIA_COLUMNS:
@@ -147,9 +147,8 @@ def load_cirugias(csv_path: str) -> pd.DataFrame:
 
 
 def load_historia(csv_path: str) -> pd.DataFrame:
-    if os.path.exists(csv_path):
-        df = pd.read_csv(csv_path)
-    else:
+    df = db.leer("historia_clinica")
+    if df.empty:
         df = pd.DataFrame(columns=HISTORIA_COLUMNS)
 
     for col in HISTORIA_COLUMNS:
@@ -167,7 +166,7 @@ def load_historia(csv_path: str) -> pd.DataFrame:
 def load_pacientes_registrados(csv_path: str) -> pd.DataFrame:
     cols = ["nombre_paciente", "numero_documento", "tipo_documento", "fecha_nacimiento", "sexo", "institucion"]
     try:
-        df = pd.read_csv(csv_path)
+        df = db.leer("pacientes")
     except Exception:
         return pd.DataFrame(columns=cols)
     for col in cols:
@@ -180,7 +179,7 @@ def load_pacientes_registrados(csv_path: str) -> pd.DataFrame:
 
 
 def save_historia(df: pd.DataFrame, csv_path: str):
-    df.to_csv(csv_path, index=False)
+    db.guardar("historia_clinica", df)
 
 
 def next_id(df: pd.DataFrame) -> int:

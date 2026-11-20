@@ -3,6 +3,7 @@ from datetime import date, datetime, timedelta
 
 import pandas as pd
 import streamlit as st
+import db
 
 from ai_assistant import ClinicalAIAssistant
 from navegacion import botones_nav
@@ -63,7 +64,9 @@ def _dir(data_dir: str) -> str:
 def cargar(data_dir: str, nombre: str) -> pd.DataFrame:
     ruta = os.path.join(_dir(data_dir), f"{nombre}.csv")
     columnas = SCHEMAS[nombre]
-    df = pd.read_csv(ruta, dtype=str, keep_default_na=False) if os.path.exists(ruta) else pd.DataFrame(columns=columnas)
+    df = db.leer(f"est_{nombre}")
+    if df.empty:
+        df = pd.DataFrame(columns=columnas)
     for col in columnas:
         if col not in df.columns:
             df[col] = ""
@@ -75,7 +78,9 @@ def guardar(data_dir: str, nombre: str, df: pd.DataFrame):
     df = df.reindex(columns=columnas, fill_value="")
     if "fecha_modificacion" in columnas:
         ruta = os.path.join(_dir(data_dir), f"{nombre}.csv")
-        anterior = pd.read_csv(ruta, dtype=str, keep_default_na=False) if os.path.exists(ruta) else pd.DataFrame(columns=columnas)
+        anterior = db.leer(f"est_{nombre}")
+        if anterior.empty:
+            anterior = pd.DataFrame(columns=columnas)
         if not anterior.empty:
             anterior = anterior.set_index("id").reindex(df["id"]).reset_index()
             excluidas = ["fecha_modificacion", "usuario_modificacion"]
@@ -89,7 +94,7 @@ def guardar(data_dir: str, nombre: str, df: pd.DataFrame):
         for i in df.index[~solo_auditoria]:
             df.at[i, "fecha_modificacion"] = nuevo
             df.at[i, "usuario_modificacion"] = usuario
-    df.to_csv(os.path.join(_dir(data_dir), f"{nombre}.csv"), index=False)
+    db.guardar(f"est_{nombre}", df)
 
 
 def agregar(data_dir: str, nombre: str, fila: dict) -> str:

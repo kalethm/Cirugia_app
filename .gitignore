@@ -22,4 +22,6 @@ credentials.json
 # Sistema
 .DS_Store
 Thumbs.db
-EOF
+
+data/app.db
+data/backups/

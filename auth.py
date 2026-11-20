@@ -1,8 +1,9 @@
 import streamlit as st
 import pandas as pd
+import db
 
 def cargar_usuarios():
-    return pd.read_csv("data/usuarios.csv")
+    return db.leer("usuarios")
 
 def login():
     st.title("🔐 Sistema de Gestión de Cirugías")

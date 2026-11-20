@@ -10,6 +10,7 @@ import pandas as pd
 import streamlit as st
 
 from navegacion import botones_nav
+import db
 from parametros import opciones as opciones_param
 from esterilizacion import cargar as cargar_tabla, sets_vencidos
 
@@ -24,10 +25,7 @@ def ruta(data_dir="data"):
 
 
 def cargar(data_dir="data"):
-    path = ruta(data_dir)
-    if not os.path.exists(path):
-        pd.DataFrame(columns=COLUMNAS).to_csv(path, index=False)
-    df = pd.read_csv(path, dtype=str).fillna("")
+    df = db.leer("programacion")
     for col in COLUMNAS:
         if col not in df.columns:
             df[col] = ""
@@ -35,7 +33,7 @@ def cargar(data_dir="data"):
 
 
 def guardar(df, data_dir="data"):
-    df[COLUMNAS].to_csv(ruta(data_dir), index=False)
+    db.guardar("programacion", df[COLUMNAS])
 
 
 def _ahora():
@@ -261,9 +259,9 @@ def _programar(df, data_dir):
                 st.error("Paciente y procedimiento son obligatorios.")
             else:
                 nuevo_id = int(df["id"].max() + 1) if not df.empty and str(df["id"].max()).isdigit() else 1
-                fila = pd.DataFrame([[nuevo_id, str(fecha), hora.strftime("%H:%M"), paciente.strip(), documento.strip(),
-                                      procedimiento.strip(), cirujano if cirujano != "—" else "", quiro, "Programada",
-                                      materiales.strip(), observaciones.strip(), str(duracion), _usuario(), _ahora(), _usuario()]], columns=COLUMNAS)
+                fila = pd.DataFrame([[nuevo_id, str(fecha), hora.strftime("%H:%M"), paciente.strip().title(), documento.strip().upper(),
+                                      procedimiento.strip().title(), cirujano if cirujano != "—" else "", quiro, "Programada",
+                                      materiales.strip().capitalize(), observaciones.strip().capitalize(), str(duracion), _usuario(), _ahora(), _usuario()]], columns=COLUMNAS)
                 guardar(pd.concat([df, fila], ignore_index=True), data_dir)
                 st.session_state["agenda_dia_sel"] = fecha
                 st.success("Cirugía programada.")
